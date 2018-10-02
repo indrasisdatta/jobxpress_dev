@@ -1,0 +1,86 @@
+<link rel="stylesheet" href="https://unpkg.com/ngx-bootstrap/datepicker/bs-datepicker.css">
+
+<div class="page_banner banner post-banner">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div class="banner-heading">Add new post</div>    
+            </div>  
+        </div>
+    </div>
+</div>
+<main id="maincontent">
+    <section class="resume">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="page-heading">
+                        <h2>Add new post</h2>
+                        <p>Provide details about your post below.</p>
+                    </div>
+                </div>
+            </div>
+            <form [formGroup]="angForm" novalidate>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel-body">
+                            <div class="form-group col-md-6 p-l" [ngClass]="{'has-error': isInvalid('title')}">
+                                <label>Title <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" placeholder="Post title" 
+                                        ngModel formControlName="title" #title
+                                />
+                            </div>
+                            <div class="form-group col-md-6 p-r" [ngClass]="{'has-error': isInvalid('category_id')}">
+                                <label>Service category <span class="text-danger">*</span></label>
+                                <select class="form-control" ngModel formControlName="category_id" #category_id>
+                                    <option>--- Choose a Category ---</option>
+                                    <option>Photography</option>
+                                    <option>Lodge</option>
+                                    <option>Catering</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-12 p-l p-r" [ngClass]="{'has-error': isInvalid('description')}">
+                                <label>Description <span class="text-danger">*</span></label>
+                                <textarea class="form-control" placeholder="Post description"
+                                            ngModel formControlName="description" #description>
+                                </textarea>
+                            </div>
+                            <div class="form-group col-md-6 p-l" [ngClass]="{'has-error': isInvalid('start_date')}">
+                                <label>Start date <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" placeholder="Start date"
+                                        bsDatepicker [bsConfig]="bsConfig" ngModel formControlName="start_date" #start_date
+                                        
+                                />
+                            </div>
+                            <div class="form-group col-md-6 p-r" [ngClass]="{'has-error': isInvalid('end_date')}">
+                                <label>End date <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" placeholder="End date"
+                                        bsDatepicker [bsConfig]="bsConfig" ngModel formControlName="end_date" #end_date
+                                        
+                                />
+                            </div>
+                            <div class="form-group col-md-6 p-l" [ngClass]="{'has-error': isInvalid('location')}">
+                                <label>Location <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" 
+                                        ngModel formControlName="location" #location
+                                />
+                            </div>
+                            <div class="form-group col-md-6 p-r" [ngClass]="{'has-error': isInvalid('budget')}">
+                                <label>Budget <span>(Optional)</span></label>
+                                <input type="text" class="form-control" placeholder="Budget" 
+                                        ngModel formControlName="budget" #budget
+                                />
+                            </div>
+                            
+                            <div class="col-md-12 p-l">
+                                <button class="btn btn-default" type="submit"
+                                        [disabled]="angForm.pristine || angForm.invalid || disableBtn"
+                                >Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</main>
