@@ -20,19 +20,21 @@
                     </div>
                 </div>
             </div>
-            <form [formGroup]="angForm" novalidate>
+            <form [formGroup]="angForm" (ngSubmit)="submitPost();" novalidate>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="panel-body">
+                            <div class="panel-heading">Basic details:</div>
+                            <hr/>
                             <div class="form-group col-md-6 p-l" [ngClass]="{'has-error': isInvalid('title')}">
                                 <label>Title <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" placeholder="Post title" 
-                                        ngModel formControlName="title" #title
+                                        formControlName="title" #title (change)="log('title')"
                                 />
                             </div>
-                            <div class="form-group col-md-6 p-r" [ngClass]="{'has-error': isInvalid('category_id')}">
+                            <div class="form-group col-md-6 p-r" >
                                 <label>Service category <span class="text-danger">*</span></label>
-                                <select class="form-control" ngModel formControlName="category_id" #category_id>
+                                <select class="form-control" formControlName="category_id" #category_id>
                                     <option>--- Choose a Category ---</option>
                                     <option>Photography</option>
                                     <option>Lodge</option>
@@ -42,36 +44,208 @@
                             <div class="form-group col-md-12 p-l p-r" [ngClass]="{'has-error': isInvalid('description')}">
                                 <label>Description <span class="text-danger">*</span></label>
                                 <textarea class="form-control" placeholder="Post description"
-                                            ngModel formControlName="description" #description>
+                                                formControlName="description" #description>
                                 </textarea>
                             </div>
                             <div class="form-group col-md-6 p-l" [ngClass]="{'has-error': isInvalid('start_date')}">
                                 <label>Start date <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" placeholder="Start date"
-                                        bsDatepicker [bsConfig]="bsConfig" ngModel formControlName="start_date" #start_date
+                                        bsDatepicker [bsConfig]="bsConfig"  formControlName="start_date" #start_date
                                         
                                 />
                             </div>
                             <div class="form-group col-md-6 p-r" [ngClass]="{'has-error': isInvalid('end_date')}">
                                 <label>End date <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" placeholder="End date"
-                                        bsDatepicker [bsConfig]="bsConfig" ngModel formControlName="end_date" #end_date
+                                        bsDatepicker [bsConfig]="bsConfig"  formControlName="end_date" #end_date
                                         
                                 />
-                            </div>
-                            <div class="form-group col-md-6 p-l" [ngClass]="{'has-error': isInvalid('location')}">
-                                <label>Location <span class="text-danger">*</span></label>
+                            </div>                           
+                            
+                            <div class="form-group col-md-6 p-l" [ngClass]="{'has-error': isInvalid('state')}">
+                                <label>State <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" 
-                                        ngModel formControlName="location" #location
+                                            formControlName="state" #state
+                                />
+                            </div>
+                            <div class="form-group col-md-6 p-r" [ngClass]="{'has-error': isInvalid('city')}">
+                                <label>City <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" 
+                                        formControlName="city" #city
+                                />
+                            </div>
+                            <div class="form-group col-md-6 p-l" [ngClass]="{'has-error': isInvalid('postcode')}">
+                                <label>Postcode <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" 
+                                        formControlName="postcode" #postcode
                                 />
                             </div>
                             <div class="form-group col-md-6 p-r" [ngClass]="{'has-error': isInvalid('budget')}">
                                 <label>Budget <span>(Optional)</span></label>
                                 <input type="text" class="form-control" placeholder="Budget" 
-                                        ngModel formControlName="budget" #budget
+                                            formControlName="budget" #budget
                                 />
+                            </div>                            
+
+                            <div class="form-group col-md-6 p-r">
+                                <div class="inline-block">
+                                    <div ngfDrop
+                                        multiple         = "1"
+                                        selectable       = "1"
+                                        [(validDrag)]    = "validComboDrag"
+                                        [(files)]        = "files"
+                                        accept           = "image/*"
+                                        [maxSize]        = "1024"
+                                        [(lastInvalids)] = "lastInvalids"
+                                        [(dragFiles)]    = "dragFiles"
+                                        class            = "well my-drop-zone"
+                                        [class.invalid-drag] = "validComboDrag===false"
+                                        [class.valid-drag]   = "validComboDrag"
+                                        (filesChange) = "lastFileAt=getDate()"
+                                    >
+                                        Combo drop/select <strong>image</strong> only zone
+                                    </div>
+                                </div>                                       
+
+                                <div style="margin-bottom: 40px" *ngIf="files">
+                                    <h3>{{ files.length }} Qued Files</h3>
+                                    <table class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Type</th>
+                                            <th>Size</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr *ngFor="let item of files;let i=index">
+                                            <td>
+                                            <div *ngIf="['image/gif','image/png','image/jpeg'].indexOf(item.type)>=0">
+                                                <div class="previewIcon" [ngfBackground]="item"></div>
+                                            </div>
+                                            <strong>{{ item.name }}</strong>
+                                            </td>
+                                            <td nowrap>
+                                            {{ item.type }}
+                                            </td>
+                                            <td nowrap>
+                                            {{ item.size/1024/1024 | number:'.2' }} MB
+                                            </td>
+                                            <td nowrap>
+                                            <button type="button"
+                                                class="btn btn-danger btn-xs"
+                                                (click)="files.splice(i,1)"
+                                            >
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </button>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                    
+                                    <div>
+                                        <div>
+                                        Queue progress:
+                                        <div class="progress" style="">
+                                            <div class="progress-bar"
+                                            role="progressbar"
+                                            [ngStyle]="{ 'width': progress + '%' }"
+                                            ></div>
+                                        </div>
+                                        </div>
+                                    
+                                        <ng-container *ngIf="lastFileAt">
+                                        <p>
+                                            <strong>Last file(s) selected At:</strong> {{ lastFileAt | date : 'longTime' }}
+                                        </p>
+                                        </ng-container>
+                                    
+                                        <i *ngIf="progress==100" class="glyphicon glyphicon-ok"></i>
+                                    
+                                        <button type="button"
+                                        class="btn btn-success btn-s"
+                                        (click)="uploadFiles(files)"
+                                        [disabled]="!files.length"
+                                        >
+                                        <span class="glyphicon glyphicon-upload"></span> Upload all
+                                        </button>
+                                    
+                                        <button type="button"
+                                        class="btn btn-warning btn-s"
+                                        (click)="cancel()"
+                                        [disabled]="!httpEmitter"
+                                        >
+                                        <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
+                                        </button>
+                                        <button type="button"
+                                        class="btn btn-danger btn-s"
+                                        (click)="files.length=0"
+                                        [disabled]="!files.length"
+                                        >
+                                        <span class="glyphicon glyphicon-trash"></span> Remove all
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- <button ngfSelect [(file)]="userFile" accept="image/*" multiple="1">
+                                    Tap to Select
+                                    </button>
+                                <div ngfDrop selectable="1" multiple="1" class="well" accept="image/*"
+                                    [(files)]="userFile"
+                                    [(validDrag)]="validComboDrag"
+                                    [(invalidDrag)]="invalidComboDrag"
+                                    [ngClass]="{'goodDragClass':validComboDrag, 'badDragClass':invalidComboDrag}"
+                                  >
+                                    Combo drop/select zone
+                                  </div>
+                                <div [ngfBackground]="userFile"
+                                    style="background-size:cover;background-repeat:no-repeat;width:100px;height:100px"
+                                ></div>
+
+                                <input
+                                    ngf
+                                    multiple
+                                    type      = "file"
+                                    accept    = "image/*"
+                                    [(files)] = "files"
+                                    maxSize   = "1024"
+                                />
+                                <button *ngIf="files" (click)="uploadFiles(files)">send files</button>
+                                
+                                <ngfFormData
+                                    [files]      = "files"
+                                    [(FormData)] = "myFormData"
+                                    postName     = "file"
+                                ></ngfFormData>
+                                
+                                <ngfUploadStatus
+                                    [(percent)] = "uploadPercent"
+                                    [httpEvent] = "httpEvent"
+                                ></ngfUploadStatus>
+                                
+                                <div *ngIf="uploadPercent">
+                                Upload Progress: {{ uploadPercent }}%
+                                </div> -->
+                                <!-- <div
+                                    ngfDrop
+                                    multiple         = "1"
+                                    selectable       = "1"
+                                    [(validDrag)]    = "validComboDrag"
+                                    [(files)]        = "files"
+                                    accept           = "image/*"
+                                    [maxSize]        = "maxSize"
+                                    [(lastInvalids)] = "lastInvalids"
+                                    [(dragFiles)]    = "dragFiles"
+                                    class            = "well my-drop-zone"
+                                    [class.invalid-drag] = "validComboDrag===false"
+                                    [class.valid-drag]   = "validComboDrag"
+                                    
+                                    >
+                                    Combo drop/select <strong>image</strong> only zone
+                                </div> -->
                             </div>
-                            
+
                             <div class="col-md-12 p-l">
                                 <button class="btn btn-default" type="submit"
                                         [disabled]="angForm.pristine || angForm.invalid || disableBtn"

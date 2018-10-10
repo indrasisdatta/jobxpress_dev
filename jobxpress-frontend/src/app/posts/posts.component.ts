@@ -2,6 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { FormGroup, FormControl, FormBuilder,  Validators, AbstractControl } from '@angular/forms';
 
+import { ngfModule, ngf } from "angular-file";
+import { NgModule } from "@angular/core";
+import { HttpClient, HttpRequest, HttpResponse, HttpEvent } from '@angular/common/http';
+import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { BrowserModule } from '@angular/platform-browser';
+import { Subscription } from 'rxjs';
+
 @Component({
   selector: 'app-posts',
   templateUrl: './posts.component.html',
@@ -17,10 +24,18 @@ export class PostsComponent implements OnInit {
   public angForm: FormGroup;
   public disableBtn: Boolean;
 
-  constructor(private fb: FormBuilder) { 
+  postUrl = 'http://localhost:7777/jobxpress/jobexpress-backend/api/get-services';
+  myFormData:FormData;
+  httpEvent:HttpEvent<Event>;
+
+  constructor(public HttpClient:HttpClient, private fb: FormBuilder) { 
     this.startMinDate = new Date();
     this.endMinDate   = new Date();
     this.createForm();
+  }
+
+  uploadFiles(files:File[]) {
+    console.log('Files --> ', files);
   }
 
   ngOnInit() {
@@ -36,8 +51,11 @@ export class PostsComponent implements OnInit {
       description: ['', [Validators.required, Validators.maxLength(200)]],
       start_date: ['', Validators.required],
       end_date: ['', Validators.required],
-      location: ['', Validators.required],
+      state: ['', Validators.required],
+      city: ['', Validators.required],
+      postcode: ['', Validators.required],
       budget: [''],
+      maxSize: ['1024']
     });
   }
 
@@ -46,13 +64,17 @@ export class PostsComponent implements OnInit {
     return  this.angForm.controls[field].invalid && (this.angForm.controls[field].dirty || this.angForm.controls[field].touched);
   }
 
+  public dragFiles() {
+    console.log('Drag file function called!');
+  }
+
   /* Log input object data for debugging purpose */
-  log(obj) {
-    console.log(obj);
+  public log(obj) {
+    console.log(this.angForm.controls);
   }
 
   /* Add post function after submit */
-  addPostSubmit(formData) {
-    console.log(formData);
+  public submitPost() {
+    console.log(this.angForm);
   }
 }
