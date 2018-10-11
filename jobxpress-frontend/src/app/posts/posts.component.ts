@@ -24,18 +24,25 @@ export class PostsComponent implements OnInit {
   public angForm: FormGroup;
   public disableBtn: Boolean;
 
+  accept = '*';
+  files:File[] = [];
+  progress:number;
+  url = 'https://evening-anchorage-3159.herokuapp.com/api/';
+  hasBaseDropZoneOver:boolean = false;
+  httpEmitter:Subscription;
+  lastFileAt:Date;
+ 
+  sendableFormData:FormData;
+
   postUrl = 'http://localhost:7777/jobxpress/jobexpress-backend/api/get-services';
   myFormData:FormData;
-  httpEvent:HttpEvent<Event>;
+  // httpEvent:HttpEvent<Event>;
+  httpEvent:any;
 
   constructor(public HttpClient:HttpClient, private fb: FormBuilder) { 
     this.startMinDate = new Date();
     this.endMinDate   = new Date();
     this.createForm();
-  }
-
-  uploadFiles(files:File[]) {
-    console.log('Files --> ', files);
   }
 
   ngOnInit() {
@@ -76,5 +83,40 @@ export class PostsComponent implements OnInit {
   /* Add post function after submit */
   public submitPost() {
     console.log(this.angForm);
+  }
+
+  cancel(){
+    this.progress = 0
+    if( this.httpEmitter ){
+      console.log('cancelled')
+      this.httpEmitter.unsubscribe()
+    }
+  }
+ 
+  uploadFiles(files:File[]):Subscription {
+
+    console.log(this.sendableFormData);
+    
+    const req = new HttpRequest<FormData>('POST', this.postUrl, this.sendableFormData, {
+      reportProgress: true
+      //, responseType: 'text'
+    })
+    
+    return this.httpEmitter = this.HttpClient.request(req)
+    .subscribe(
+      event=>{
+        this.httpEvent = event
+        
+        if (event instanceof HttpResponse) {
+          delete this.httpEmitter
+          console.log('request done', event)
+        }
+      },
+      error=>console.log('Error Uploading',error)
+    )
+  }
+ 
+  getDate(){
+    return new Date()
   }
 }

@@ -12,5 +12,10 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    echo "Hello";
+});
+
+Route::get('/test', function() {
+	echo "Testing web route!";
+	exit;
 });
