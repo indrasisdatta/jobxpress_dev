@@ -13,12 +13,28 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('get-services', 'API\ServicesController@getServices');
+Route::group([
+    'middleware' => 'cors',
+    'namespace'  => 'API'
+], function ($router) {
+ 	
+ 	Route::apiResources([
+	    'services' => 'ServicesController',
+	    'states'   => 'StatesController',
+	    'cities'   => 'CitiesController',
+	    'posts'    => 'PostsController'
+	]);
 
-Route::post('login', 'API\UsersController@login');
-Route::post('register', 'API\UsersController@register');
+	Route::post('testUpload', 'API\ServicesController@testUpload');
 
-Route::group(['middleware' => 'auth:api'], function(){
-	Route::post('profile', 'API\UsersController@profile');
+	Route::post('login', 'API\UsersController@login');
+	Route::post('register', 'API\UsersController@register');
+
+	Route::group(['middleware' => 'auth:api'], function(){
+		Route::post('profile', 'API\UsersController@profile');
+	});
 });
+
+
+
 

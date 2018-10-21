@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 02, 2018 at 04:00 PM
+-- Generation Time: Oct 21, 2018 at 06:35 AM
 -- Server version: 10.1.10-MariaDB
 -- PHP Version: 7.0.2
 
@@ -1536,19 +1536,21 @@ CREATE TABLE `migrations` (
 --
 
 INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
-(1, '2014_10_12_000000_create_users_table', 1),
-(2, '2014_10_12_100000_create_password_resets_table', 1),
-(3, '2018_10_02_041350_create_user_details_table', 1),
-(6, '2018_10_02_045129_create_states_table', 2),
-(7, '2018_10_02_045157_create_cities_table', 2),
-(8, '2018_10_02_051632_create_services_table', 3),
-(9, '2016_06_01_000001_create_oauth_auth_codes_table', 4),
-(10, '2016_06_01_000002_create_oauth_access_tokens_table', 4),
-(11, '2016_06_01_000003_create_oauth_refresh_tokens_table', 4),
-(12, '2016_06_01_000004_create_oauth_clients_table', 4),
-(13, '2016_06_01_000005_create_oauth_personal_access_clients_table', 4),
-(14, '2018_10_02_131315_update_users_table', 5),
-(15, '2018_10_02_132310_update_users_table', 6);
+(29, '2014_10_12_000000_create_users_table', 1),
+(30, '2014_10_12_100000_create_password_resets_table', 1),
+(31, '2016_06_01_000001_create_oauth_auth_codes_table', 1),
+(32, '2016_06_01_000002_create_oauth_access_tokens_table', 1),
+(33, '2016_06_01_000003_create_oauth_refresh_tokens_table', 1),
+(34, '2016_06_01_000004_create_oauth_clients_table', 1),
+(35, '2016_06_01_000005_create_oauth_personal_access_clients_table', 1),
+(36, '2018_10_02_041350_create_user_details_table', 1),
+(37, '2018_10_02_045129_create_states_table', 1),
+(38, '2018_10_02_045157_create_cities_table', 1),
+(39, '2018_10_02_051632_create_services_table', 1),
+(40, '2018_10_02_131315_update_users_table', 1),
+(41, '2018_10_02_132310_update_users_table', 1),
+(42, '2018_10_14_114623_create_posts_table', 1),
+(45, '2018_10_14_120138_create_post_images_table', 2);
 
 -- --------------------------------------------------------
 
@@ -1567,15 +1569,6 @@ CREATE TABLE `oauth_access_tokens` (
   `updated_at` timestamp NULL DEFAULT NULL,
   `expires_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `oauth_access_tokens`
---
-
-INSERT INTO `oauth_access_tokens` (`id`, `user_id`, `client_id`, `name`, `scopes`, `revoked`, `created_at`, `updated_at`, `expires_at`) VALUES
-('212cefc8486e3869a9bf1691f892f0c25b66812dc6cbc2ad368da53e9e43722fc0d48f7f325e65c3', 2, 1, 'MyApp', '[]', 0, '2018-10-02 08:04:27', '2018-10-02 08:04:27', '2019-10-02 13:34:27'),
-('24d12eeb65afc7998b5cdd18c64bc306b708930d1a5d58ef2d3149d55af129fbabf23410ac8c05ca', 1, 1, 'MyApp', '[]', 0, '2018-10-02 08:01:55', '2018-10-02 08:01:55', '2019-10-02 13:31:55'),
-('a4452a950362473188cb6065ea053b5e5ae987af269ceb116c9fba275f2385e4d8c9453074f0cac7', 2, 1, 'MyApp', '[]', 0, '2018-10-02 08:06:53', '2018-10-02 08:06:53', '2019-10-02 13:36:53');
 
 -- --------------------------------------------------------
 
@@ -1611,14 +1604,6 @@ CREATE TABLE `oauth_clients` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `oauth_clients`
---
-
-INSERT INTO `oauth_clients` (`id`, `user_id`, `name`, `secret`, `redirect`, `personal_access_client`, `password_client`, `revoked`, `created_at`, `updated_at`) VALUES
-(1, NULL, 'Laravel Personal Access Client', '6mK0TzG3aAUiOP1KvWbbU09OLGxpgEremUAGCnmV', 'http://localhost', 1, 0, 0, '2018-10-02 02:21:05', '2018-10-02 02:21:05'),
-(2, NULL, 'Laravel Password Grant Client', 'hepYINrB96UrWMJnRQpPkdZcLlr6CgG3utMs9ecF', 'http://localhost', 0, 1, 0, '2018-10-02 02:21:05', '2018-10-02 02:21:05');
-
 -- --------------------------------------------------------
 
 --
@@ -1631,13 +1616,6 @@ CREATE TABLE `oauth_personal_access_clients` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `oauth_personal_access_clients`
---
-
-INSERT INTO `oauth_personal_access_clients` (`id`, `client_id`, `created_at`, `updated_at`) VALUES
-(1, 1, '2018-10-02 02:21:05', '2018-10-02 02:21:05');
 
 -- --------------------------------------------------------
 
@@ -1667,6 +1645,60 @@ CREATE TABLE `password_resets` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `posts`
+--
+
+CREATE TABLE `posts` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `service_id` int(10) UNSIGNED NOT NULL,
+  `city_id` int(10) UNSIGNED NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `start_date` datetime NOT NULL,
+  `end_date` datetime NOT NULL,
+  `postcode` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `budget` decimal(10,2) DEFAULT NULL,
+  `is_active` smallint(6) NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `posts`
+--
+
+INSERT INTO `posts` (`id`, `user_id`, `service_id`, `city_id`, `title`, `slug`, `description`, `start_date`, `end_date`, `postcode`, `budget`, `is_active`, `created_at`, `updated_at`) VALUES
+(5, 1, 2, 1475, 'Test title', 'test-title', 'Test desc test desc test desc', '2018-10-20 00:00:00', '2018-10-22 00:00:00', '700025', '35000.00', 0, '2018-10-19 07:24:07', '2018-10-19 07:24:07');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `post_images`
+--
+
+CREATE TABLE `post_images` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `post_id` bigint(20) UNSIGNED NOT NULL,
+  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `is_featured` smallint(6) NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `post_images`
+--
+
+INSERT INTO `post_images` (`id`, `post_id`, `title`, `is_featured`, `created_at`, `updated_at`) VALUES
+(1, 5, 'post_1539953647_0.jpg', 0, '2018-10-19 07:24:07', '2018-10-19 07:24:07'),
+(2, 5, 'post_1539953647_1.jpg', 0, '2018-10-19 07:24:07', '2018-10-19 07:24:07'),
+(3, 5, 'post_1539953647_2.jpg', 0, '2018-10-19 07:24:07', '2018-10-19 07:24:07');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `services`
 --
 
@@ -1680,10 +1712,11 @@ CREATE TABLE `services` (
 --
 
 INSERT INTO `services` (`id`, `title`) VALUES
-(1, 'Photography'),
-(2, 'Catering'),
-(3, 'Lodge for rent'),
-(4, 'Make over');
+(1, 'Catering'),
+(2, 'Photography'),
+(3, 'Rent a lodge'),
+(4, 'Make up'),
+(5, 'Event planning');
 
 -- --------------------------------------------------------
 
@@ -1713,7 +1746,7 @@ INSERT INTO `states` (`id`, `name`) VALUES
 (13, 'Delhi'),
 (14, 'Goa'),
 (15, 'Gujarat'),
-(16, ' India'),
+(16, 'India'),
 (17, 'Gujrat'),
 (18, 'Hariyana'),
 (19, 'Haryana'),
@@ -1739,14 +1772,14 @@ INSERT INTO `states` (`id`, `name`) VALUES
 (39, 'Tamil Nadu'),
 (40, 'Tripura'),
 (41, 'Uttar Pradesh'),
-(42, ' Ghazipur'),
-(43, ' Hardoi'),
-(44, ' Rampur'),
-(45, ' Agra'),
-(46, ' Farrukhabad'),
-(47, ' Bulandshahr'),
+(42, 'Ghazipur'),
+(43, 'Hardoi'),
+(44, 'Rampur'),
+(45, 'Agra'),
+(46, 'Farrukhabad'),
+(47, 'Bulandshahr'),
 (48, 'Uttarakhand'),
-(49, ' Purulia');
+(49, 'Purulia');
 
 -- --------------------------------------------------------
 
@@ -1761,19 +1794,18 @@ CREATE TABLE `users` (
   `email` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `phone` varchar(128) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `status` smallint(6) NOT NULL DEFAULT '0',
+  `status` tinyint(4) NOT NULL,
   `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  `is_email_verified` smallint(6) NOT NULL DEFAULT '0'
+  `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `password`, `phone`, `status`, `remember_token`, `created_at`, `updated_at`, `is_email_verified`) VALUES
-(2, 'John', 'Doe', 'johndoe@gmail.com', '$2y$10$XrB68VOHHuZsMhZDiptQmOVD7UR8MWbSUsvZR4tKVF/GaREJ8TfUG', NULL, 0, NULL, '2018-10-02 08:04:27', '2018-10-02 08:04:27', 0);
+INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `password`, `phone`, `status`, `remember_token`, `created_at`, `updated_at`) VALUES
+(1, 'Test', 'user', 'test@gmail.com', '123456', NULL, 0, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1851,6 +1883,22 @@ ALTER TABLE `password_resets`
   ADD KEY `password_resets_email_index` (`email`);
 
 --
+-- Indexes for table `posts`
+--
+ALTER TABLE `posts`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `posts_service_id_foreign` (`service_id`),
+  ADD KEY `posts_user_id_foreign` (`user_id`),
+  ADD KEY `posts_city_id_foreign` (`city_id`);
+
+--
+-- Indexes for table `post_images`
+--
+ALTER TABLE `post_images`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `post_images_post_id_foreign` (`post_id`);
+
+--
 -- Indexes for table `services`
 --
 ALTER TABLE `services`
@@ -1889,22 +1937,32 @@ ALTER TABLE `cities`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 --
 -- AUTO_INCREMENT for table `oauth_clients`
 --
 ALTER TABLE `oauth_clients`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `oauth_personal_access_clients`
 --
 ALTER TABLE `oauth_personal_access_clients`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `posts`
+--
+ALTER TABLE `posts`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT for table `post_images`
+--
+ALTER TABLE `post_images`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `services`
 --
 ALTER TABLE `services`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `states`
 --
@@ -1914,7 +1972,7 @@ ALTER TABLE `states`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `user_details`
 --
@@ -1929,6 +1987,20 @@ ALTER TABLE `user_details`
 --
 ALTER TABLE `cities`
   ADD CONSTRAINT `cities_state_id_foreign` FOREIGN KEY (`state_id`) REFERENCES `states` (`id`);
+
+--
+-- Constraints for table `posts`
+--
+ALTER TABLE `posts`
+  ADD CONSTRAINT `posts_city_id_foreign` FOREIGN KEY (`city_id`) REFERENCES `cities` (`id`),
+  ADD CONSTRAINT `posts_service_id_foreign` FOREIGN KEY (`service_id`) REFERENCES `services` (`id`),
+  ADD CONSTRAINT `posts_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `post_images`
+--
+ALTER TABLE `post_images`
+  ADD CONSTRAINT `post_images_post_id_foreign` FOREIGN KEY (`post_id`) REFERENCES `posts` (`id`);
 
 --
 -- Constraints for table `user_details`

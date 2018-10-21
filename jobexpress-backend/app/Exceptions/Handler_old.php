@@ -3,16 +3,10 @@
 namespace App\Exceptions;
 
 use Exception;
-use App\Traits\RestTrait;
-use App\Traits\RestExceptionHandlerTrait;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
-class Handler extends ExceptionHandler
+class Handler_bk extends ExceptionHandler
 {
-    use RestTrait;
-    use RestExceptionHandlerTrait;
-
     /**
      * A list of the exception types that are not reported.
      *
@@ -49,23 +43,18 @@ class Handler extends ExceptionHandler
      * Render an exception into an HTTP response.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \Exception  $e
+     * @param  \Exception  $exception
      * @return \Illuminate\Http\Response
      */
-    public function render($request, Exception $e)
+    public function render($request, Exception $exception)
     {
-        /* Production mode exception handling */
+        if ($exception instanceof \Symfony\Component\HttpKernel\Exception\HttpException) {
 
-        // if(!$this->isApiCall($request)) {
-        //     $retval = parent::render($request, $e);
-        // } else {
-        //     $retval = $this->getJsonResponseForException($request, $e);
-        // }
-
-        /* Development mode exception handling */
-
-        $retval = parent::render($request, $e); // for debugging only
-
-        return $retval;
+            if ($request->is('api/*')) {
+                return response()->json(['status' => 0, 'error' => 'Page or type is invalid'], 404);
+            }
+            return response()->view('404', [], 404);
+        }
+        return parent::render($request, $exception);
     }
 }

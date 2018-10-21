@@ -10,9 +10,34 @@ use App\Http\Resources\Service as ServiceResource;
 
 class ServicesController extends Controller
 {
-    public function getServices()
+    /**
+     * Service listing
+     *
+     */
+    public function index()
     {
     	$services = Service::all();
     	return ServiceResource::collection($services);
+    }
+
+    public function testUpload(Request $request)
+    {
+    	$req = $request->all();
+
+    	echo '<pre>';
+    	print_r($req);
+    	exit;
+    }
+
+    public function create()
+    {
+        echo "Create!";
+        exit;
+    }
+
+    public function update($id)
+    {
+        echo "update!";
+        exit;
     }
 }

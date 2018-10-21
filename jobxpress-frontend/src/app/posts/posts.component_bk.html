@@ -21,7 +21,7 @@
                     <div *ngIf="is_server_error" class="alert alert-warning">Something went wrong. Please check your internet connection!</div>
                 </div>
             </div>
-            <form [formGroup]="angForm" (ngSubmit)="submitPost();" enctype="multipart/form-data" novalidate>
+            <form [formGroup]="angForm" (ngSubmit)="submitPost();" novalidate>
                 <div class="row">
                     <div class="col-md-12">
                         <div class="panel-body" style="padding: 25px 40px;">
@@ -38,14 +38,14 @@
                                     <span *ngIf="angForm.controls['title'].errors.required" class="text-danger">Title is required.</span>
                                   </div>
                               </div>
-                              <div class="form-group col-md-6 p-r" [ngClass]="{'has-error': isInvalid('service_id')}">
+                              <div class="form-group col-md-6 p-r" [ngClass]="{'has-error': isInvalid('category_id')}">
                                   <label>Service category <span class="text-danger">*</span></label>
-                                  <select class="form-control" formControlName="service_id" #service_id>
+                                  <select class="form-control" formControlName="category_id" #category_id>
                                       <option [value]='0'>--- Choose a Category ---</option>
                                       <option *ngFor="let opt of services_options" [value]="opt.id">{{opt.title}}</option>
                                   </select>
-                                  <div *ngIf="isInvalid('service_id')">
-                                    <span *ngIf="angForm.controls['service_id'].errors.required" class="text-danger">Service category is required.</span>
+                                  <div *ngIf="isInvalid('category_id')">
+                                    <span *ngIf="angForm.controls['category_id'].errors.required" class="text-danger">Service category is required.</span>
                                   </div>
                               </div>
                             </div>
@@ -57,7 +57,6 @@
                                   </textarea>
                                   <div *ngIf="isInvalid('description')">
                                     <span *ngIf="angForm.controls['description'].errors.required" class="text-danger">Description is required.</span>
-                                    <span *ngIf="angForm.controls['description'].errors.maxlength" class="text-danger">Description cannot be more than 300 characters.</span>
                                   </div>
                               </div>
                             </div>
@@ -109,12 +108,11 @@
                             <div class="row">
                               <div class="form-group col-md-6 p-l" [ngClass]="{'has-error': isInvalid('postcode')}">
                                   <label>Postcode <span class="text-danger">*</span></label>
-                                  <input type="number" min="0" class="form-control"
-                                          formControlName="postcode" #postcode (change)="log('postcode')"
+                                  <input type="text" class="form-control" 
+                                          formControlName="postcode" #postcode
                                   />
-                                  <div *ngIf="isInvalid('postcode')">
+                                  <div *ngIf="isInvalid('city_id')">
                                     <span *ngIf="angForm.controls['postcode'].errors.required" class="text-danger">Postcode is required.</span>
-                                    <span *ngIf="angForm.controls['postcode'].errors?.invalid_postcode" class="text-danger">Postcode should be a 6 digit number (eg. 700020).</span>
                                   </div>
                               </div>
                               <div class="form-group col-md-6 p-r" [ngClass]="{'has-error': isInvalid('budget')}">
@@ -122,9 +120,6 @@
                                   <input type="text" class="form-control" placeholder="Budget" 
                                               formControlName="budget" #budget
                                   />
-                                  <div *ngIf="isInvalid('budget')">
-                                    <span *ngIf="angForm.controls['budget'].errors.invalid_format" class="text-danger">Invalid format. Enter positive number with up to 2 decimal places (eg.525.75)</span>
-                                  </div>
                               </div>   
                             </div>    
 
@@ -146,27 +141,31 @@
                                   </ngfUploadStatus>
 
                                   <div class="panel-heading">Upload images:</div> <hr/>
-                                  <div
-                                      ngfDrop
-                                      multiple         = "1"
-                                      selectable       = "1"
-                                      [(validDrag)]    = "validComboDrag"
-                                      [(files)]        = "files"
-                                      [accept]         = "accept"
-                                      [maxSize]        = "maxSize"
-                                      [(lastInvalids)] = "lastInvalids"
-                                      [(dragFiles)]    = "dragFiles"
-                                      class            = "well my-drop-zone"
-                                      [class.invalid-drag] = "validComboDrag===false"
-                                      [class.valid-drag]   = "validComboDrag"
-                                      (filesChange)    = "filesCount()"
-                                    >
-                                      Click here or drag and drop images to upload.
+                                  <div>
+                                    <div class="inline-block">
+                                      <div
+                                        ngfDrop
+                                        multiple         = "1"
+                                        selectable       = "1"
+                                        [(validDrag)]    = "validComboDrag"
+                                        [(files)]        = "files"
+                                        accept           = "image/*"
+                                        [maxSize]        = "maxSize"
+                                        [(lastInvalids)] = "lastInvalids"
+                                        [(dragFiles)]    = "dragFiles"
+                                        class            = "well my-drop-zone"
+                                        [class.invalid-drag] = "validComboDrag===false"
+                                        [class.valid-drag]   = "validComboDrag"
+                                        (filesChange) = "lastFileAt=getDate()"
+                                      >
+                                        Click here or drag and drop images to upload.
+                                      </div>
+                                    </div>
                                   </div>
-
-                                  <!-- Show invalid files list & preview -->
+                                  
                                   <div class="bg-warning" *ngIf="lastInvalids?.length" style="margin-bottom: 40px">
-                                    <label style="color:red;">{{ lastInvalids.length }} invalid selected files</label>                                  
+                                    <label style="color:red;">{{ lastInvalids.length }} invalid selected Files</label>
+                                  
                                     <table class="table">
                                       <thead>
                                         <tr>
@@ -197,7 +196,7 @@
                                           <td nowrap>
                                             <button type="button"
                                               class="btn btn-danger btn-xs"
-                                              (click)="lastInvalids.splice(i,1);"
+                                              (click)="lastInvalids.splice(i,1)"
                                             >
                                               <span class="fa fa-trash"></span>
                                             </button>
@@ -206,9 +205,8 @@
                                       </tbody>
                                     </table>
                                   </div>
-                                  <!-- Invalid table ends -->
-                                  <!-- Show valid files list & preview -->
-                                  <div style="margin-bottom: 40px" *ngIf="files.length">
+                                  
+                                  <div style="margin-bottom: 40px">
                                     <label>{{ files.length }} files selected</label>
                                     <table class="table">
                                       <thead>
@@ -236,7 +234,7 @@
                                           <td nowrap>
                                             <button type="button"
                                               class="btn btn-danger btn-xs"
-                                              (click)="files.splice(i,1);filesCount();"
+                                              (click)="files.splice(i,1)"
                                             >
                                               <span class="fa fa-trash"></span>
                                             </button>
@@ -246,25 +244,54 @@
                                     </table>
                                   
                                     <div class="mt-20">
+                                      <!-- <div>
+                                        Upload progress:
+                                        <div class="progress">
+                                          <div class="progress-bar"
+                                            role="progressbar"
+                                            [ngStyle]="{ 'width': progress + '%' }"
+                                          ></div>
+                                        </div>
+                                      </div> -->
+                                  
+                                      <!-- <ng-container *ngIf="lastFileAt">
+                                        <p>
+                                          <strong>Last file(s) selected At:</strong> {{ lastFileAt | date : 'longTime' }}
+                                        </p>
+                                      </ng-container> -->
+                                  
+                                      <!-- <i *ngIf="progress==100" class="fa fa-check"></i> -->
+                                  
+                                      <!-- <button type="button"
+                                        class="btn btn-success btn-s"
+                                        (click)="uploadFiles(files)"
+                                        [disabled]="!files.length"
+                                      >
+                                        <span class="fa fa-upload"></span> Upload all
+                                      </button> -->                                 
+                                      <!-- <button type="button"
+                                        class="btn btn-warning btn-s"
+                                        (click)="cancel()"
+                                        [disabled]="!httpEmitter"
+                                      >
+                                        <span class="fa fa-times"></span> Cancel all
+                                      </button> -->
                                       <button type="button"
                                         class="btn btn-danger btn-s"
-                                        (click)="files.length=0;filesCount();"
+                                        (click)="files.length=0"
                                         [disabled]="!files.length"
                                       >
                                         <span class="fa fa-trash"></span> Remove all
                                       </button>
                                     </div>
                                   </div>
-                                  <!-- Invalid table ends -->
-                                  <div *ngIf="maxNumFilesExceeded">
-                                    <span *ngIf="maxNumFilesExceeded" class="text-danger">You can select up to 5 images.</span>
-                                  </div>
+                                  <!-- ============ Drag and drop box ends ============= -->
                               </div>
                             </div>
                             <div class="row">
                               <div class="col-md-12 p-l">
                                   <button class="btn btn-default" type="submit"
-                                          [disabled]="angForm.pristine || angForm.invalid || maxNumFilesExceeded"
+                                          [disabled]="angForm.pristine || angForm.invalid || disableBtn"
                                   >Submit</button>
                               </div>
                             </div>

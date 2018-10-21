@@ -1,0 +1,23 @@
+
+/* Default class applied to drop zones on over */
+.invalid-drag { border: dotted 3px red; }
+.valid-drag { border: dotted 3px green; }
+.previewIcon{
+    width:100px;
+    height:100px;
+    background-size:cover;
+    background-repeat:no-repeat;
+} 
+.inline-block{
+    display:inline-block;
+    margin:.2em;
+}
+.my-drop-zone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 50px;
+}
+.mt-20 {
+    margin-top:20px;
+}
