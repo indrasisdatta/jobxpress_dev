@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests;
+use App\Http\Requests\UserRequest;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -35,32 +36,31 @@ class UsersController extends Controller
      * 
      * @return \Illuminate\Http\Response 
      */ 
-    public function register(Request $request) 
+    public function register(UserRequest $request) 
     { 
-        $validator = Validator::make($request->all(), [ 
-            'first_name'        => 'required', 
-            'last_name'         => 'required', 
-            'email'             => 'required|email', 
-            'password'          => 'required', 
-            'confirm_password'  => 'required|same:password', 
-        ]);
-
-        if ($validator->fails()) { 
-            return response()->json(['status' => 0, 'error' => $validator->errors()]);            
-        }
-        
-        $input              =   $request->all(); 
+        $input              =   $request->validated();
         $input['password']  =   bcrypt($input['password']); 
+        $input['status']    =   0; 
 
         unset($input['confirm_password']);
 
-        // $this->pr($input); die;
-
         $user               =   User::create($input); 
+
+        // Write code to send activation email here
+
         $data['token']      =   $user->createToken('MyApp')->accessToken; 
         $data['name']       =   $user->first_name . ' ' . $user->last_name;
 
         return response()->json(['status' => 1, 'data'=> $data], $this->successStatus); 
+    }
+
+    public function checkEmail($request)
+    {
+        $email  =   $request->email;
+
+        $existing_email     =   User::where('email', $email)->count();
+
+        echo $existing_email; die;
     }
 
     /** 

@@ -25,10 +25,10 @@ Route::group([
 	    'posts'    => 'PostsController'
 	]);
 
-	Route::post('testUpload', 'API\ServicesController@testUpload');
+	Route::post('testUpload', 'ServicesController@testUpload');
 
-	Route::post('login', 'API\UsersController@login');
-	Route::post('register', 'API\UsersController@register');
+	Route::post('login', 'UsersController@login');
+	Route::post('register', 'UsersController@register');
 
 	Route::group(['middleware' => 'auth:api'], function(){
 		Route::post('profile', 'API\UsersController@profile');

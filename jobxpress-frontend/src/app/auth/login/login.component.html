@@ -1,0 +1,25 @@
+<form [formGroup]="loginForm" (ngSubmit)="submitLoginForm()">
+    <div class="form-group" [ngClass]="{'has-error': isInvalid('email')}">
+        <label> Username or E-mail</label>
+        <input type="email" class="form-control" formControlName="email" #email>
+        <div class="search_icon"><span class="ti-user"></span></div>
+        <div *ngIf="isInvalid('email')">
+            <span *ngIf="loginForm.controls['email'].errors?.required" class="text-danger">Email is required.</span>
+            <span *ngIf="loginForm.controls['email'].errors?.email" class="text-danger">Invalid email.</span>
+        </div>
+    </div>
+    <div class="form-group" [ngClass]="{'has-error': isInvalid('password')}">
+        <label> Password</label>
+        <input type="password" class="form-control" formControlName="password" #password>
+        <div class="search_icon"><span class="ti-pin"></span></div>
+        <div *ngIf="isInvalid('password')">
+            <span *ngIf="loginForm.controls['password'].errors?.required" class="text-danger">Password is required.</span>
+            <span *ngIf="loginForm.controls['password'].errors?.minlength" class="text-danger">Password should not be less than 6 characters.</span>
+            <span *ngIf="loginForm.controls['password'].errors?.maxlength" class="text-danger">Password should not be more than 20 characters.</span>
+        </div>
+    </div>
+    <div *ngIf="invalid_attempt" class="alert alert-danger">Invalid credentials. Please try again.</div>
+    <div class="mrgn-30-top">
+        <input type="submit" class="btn btn-larger btn-block" [disabled]="btnDisabled || loginForm.pristine || loginForm.invalid" value="Login" />
+    </div>
+</form>
